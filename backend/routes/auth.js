@@ -121,7 +121,7 @@ router.post('/register', async (req, res) => {
       [userId, 'Welcome to Travel Rewards!', `Thank you for joining our Referral & Loyalty Program. Your referral code is ${newReferralCode}. Start booking trips to earn points!`, 'System']
     );
 
-    // Send Welcome Email
+    // Send Welcome Email in the background so it doesn't block registration
     const welcomeHtml = `
       <h2>Welcome to Travel Rewards, ${name.trim()}!</h2>
       <p>We are thrilled to have you join our Referral & Loyalty Program.</p>
@@ -131,7 +131,9 @@ router.post('/register', async (req, res) => {
       <p>Safe travels,</p>
       <p>The Travel Loyalty Team</p>
     `;
-    await sendEmail(email.toLowerCase().trim(), 'Welcome to Travel Rewards!', '', welcomeHtml);
+    
+    sendEmail(email.toLowerCase().trim(), 'Welcome to Travel Rewards!', '', welcomeHtml)
+      .catch(err => console.error('Background welcome email failed:', err.message));
 
     return res.status(201).json({
       message: 'User registered successfully!',

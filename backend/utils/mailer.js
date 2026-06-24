@@ -25,7 +25,9 @@ function initMailer() {
       rejectUnauthorized: false
     },
     // Force Node's net module to use IPv4 instead of IPv6
-    family: 4
+    family: 4,
+    // Add a 10 second timeout so it doesn't hang the server indefinitely if Render blocks the port
+    connectionTimeout: 10000
   });
   console.log('✅ Mailer initialized with real Gmail SMTP credentials.');
 }
