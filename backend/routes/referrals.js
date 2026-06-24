@@ -25,7 +25,8 @@ router.post('/invite', verifyToken, async (req, res) => {
       <p>Your friend has invited you to join our loyalty program.</p>
       <p>Use their referral code <strong>${referralCode}</strong> during registration to get a 100-point head start on your first booking!</p>
     `;
-    await sendEmail(friendEmail, 'Invitation to Travel Rewards', '', emailHtml);
+    sendEmail(friendEmail, 'Invitation to Travel Rewards', '', emailHtml)
+      .catch(err => console.error('Background invite email failed:', err.message));
 
     return res.json({
       message: `Invitation sent successfully to ${friendEmail}! They can use your code ${referralCode} when registering.`
