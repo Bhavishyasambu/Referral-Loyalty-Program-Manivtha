@@ -21,6 +21,11 @@ function initMailer() {
       user: senderEmail,
       pass: senderPassword,
     },
+    tls: {
+      rejectUnauthorized: false
+    },
+    // Force Node's net module to use IPv4 instead of IPv6
+    family: 4
   });
   console.log('✅ Mailer initialized with real Gmail SMTP credentials.');
 }
