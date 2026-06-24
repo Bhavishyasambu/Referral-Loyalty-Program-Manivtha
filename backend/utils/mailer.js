@@ -1,10 +1,4 @@
 const nodemailer = require('nodemailer');
-const dns = require('dns');
-
-// Force IPv4 for DNS resolution to fix Render ENETUNREACH errors with Gmail SMTP
-if (dns.setDefaultResultOrder) {
-  dns.setDefaultResultOrder('ipv4first');
-}
 
 let transporter = null;
 

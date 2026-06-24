@@ -1,4 +1,11 @@
 require('dotenv').config();
+
+// Force IPv4 for DNS resolution globally (must be before any other imports)
+const dns = require('dns');
+if (dns.setDefaultResultOrder) {
+  dns.setDefaultResultOrder('ipv4first');
+}
+
 const express = require('express');
 const cors = require('cors');
 const db = require('./db');
