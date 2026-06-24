@@ -1,9 +1,11 @@
 const nodemailer = require('nodemailer');
 
+const dns = require('dns').promises;
+
 let transporter = null;
 
 // Initialize the mailer asynchronously
-function initMailer() {
+async function initMailer() {
   const senderEmail = process.env.SENDER_EMAIL;
   const senderPassword = process.env.SENDER_APP_PASSWORD;
 
@@ -12,9 +14,20 @@ function initMailer() {
     return;
   }
 
+  let smtpHost = process.env.SMTP_HOST || 'smtp.gmail.com';
+
+  try {
+    // Manually force DNS resolution to strictly IPv4 to bypass Render's IPv6 ENETUNREACH issues
+    const { address } = await dns.lookup(smtpHost, { family: 4 });
+    smtpHost = address;
+    console.log(`✅ SMTP Host resolved to IPv4: ${smtpHost}`);
+  } catch (err) {
+    console.warn(`⚠️ Failed to resolve IPv4 for ${smtpHost}, falling back to default.`);
+  }
+
   // Use SMTP provider from env or fallback to Gmail
   transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'smtp.gmail.com',
+    host: smtpHost,
     port: process.env.SMTP_PORT || 587,
     secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
     auth: {
@@ -22,10 +35,9 @@ function initMailer() {
       pass: senderPassword,
     },
     tls: {
-      rejectUnauthorized: false
+      rejectUnauthorized: false,
+      servername: process.env.SMTP_HOST || 'smtp.gmail.com' // Ensure SNI matches the hostname, not the raw IP
     },
-    // Force Node's net module to use IPv4 instead of IPv6
-    family: 4,
     // Add a 10 second timeout so it doesn't hang the server indefinitely if Render blocks the port
     connectionTimeout: 10000
   });
@@ -33,7 +45,7 @@ function initMailer() {
 }
 
 // Call init on module load
-initMailer();
+initMailer().catch(err => console.error("Mailer init failed:", err));
 
 /**
  * Send an email using Nodemailer.
