@@ -55,14 +55,18 @@ export default function ReferralManagement() {
     setInviteMessage('');
     if (!friendEmail) return;
 
+    // Use stats.referralCode if available, fallback to empty string
+    const referralCode = stats?.referralCode || '';
+
     try {
-      const res = await fetch(`${API_BASE}/referrals/invite`, {
+      // Calling the new Vercel Serverless Function instead of the Render backend
+      const res = await fetch(`/api/send-email`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ friendEmail })
+        body: JSON.stringify({ friendEmail, referralCode })
       });
       const data = await res.json();
       if (res.ok) {
