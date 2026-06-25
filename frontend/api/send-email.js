@@ -64,7 +64,7 @@ export default async function handler(req, res) {
     console.log('Email sent successfully:', info.messageId);
 
     return res.status(200).json({
-      message: \`Invitation sent successfully to \${friendEmail}!\`,
+      message: `Invitation sent successfully to ${friendEmail}!`,
     });
   } catch (error) {
     console.error('Email send error:', error);
