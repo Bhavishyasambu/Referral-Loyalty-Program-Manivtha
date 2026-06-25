@@ -25,12 +25,20 @@ router.post('/invite', verifyToken, async (req, res) => {
       <p>Your friend has invited you to join our loyalty program.</p>
       <p>Use their referral code <strong>${referralCode}</strong> during registration to get a 100-point head start on your first booking!</p>
     `;
-    sendEmail(friendEmail, 'Invitation to Travel Rewards', '', emailHtml)
-      .catch(err => console.error('Background invite email failed:', err.message));
-
-    return res.json({
-      message: `Invitation sent successfully to ${friendEmail}! They can use your code ${referralCode} when registering.`
-    });
+    // Send the email and await its completion
+    try {
+      await sendEmail(friendEmail, 'Invitation to Travel Rewards', '', emailHtml);
+      
+      return res.json({
+        message: `Invitation sent successfully to ${friendEmail}! They can use your code ${referralCode} when registering.`
+      });
+    } catch (emailErr) {
+      console.error('Invite email failed:', emailErr.message);
+      return res.status(500).json({ 
+        message: 'Failed to send the email invitation. The email provider rejected the request or the configuration is invalid.', 
+        error: emailErr.message 
+      });
+    }
   } catch (err) {
     console.error('Invite error:', err);
     return res.status(500).json({ message: err.message || 'Server error sending invitation.' });

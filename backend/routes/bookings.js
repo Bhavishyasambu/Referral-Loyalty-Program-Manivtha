@@ -281,7 +281,11 @@ router.post('/', verifyToken, async (req, res) => {
       <p>Your driver (${driver_name}) will pick you up at <strong>${pickup_location}</strong> in a ${vehicle_type}.</p>
       <p>Have a great trip!</p>
     `;
-    sendEmail(req.user.email, `Booking Confirmed: ${bookingRef}`, '', bookingHtml);
+    try {
+      await sendEmail(req.user.email, `Booking Confirmed: ${bookingRef}`, '', bookingHtml);
+    } catch (emailErr) {
+      console.error(`Booking confirmed email failed for ${bookingRef}:`, emailErr.message);
+    }
 
     return res.status(201).json({
       message: 'Booking created successfully!',
@@ -403,7 +407,11 @@ router.put('/:id/status', verifyAdmin, async (req, res) => {
     // We need the user's email to send the update. Let's fetch it if we don't have it.
     const userRes = await db.query('SELECT email, name FROM users WHERE id = $1', [booking.user_id]);
     if (userRes.rows.length > 0) {
-      sendEmail(userRes.rows[0].email, `Booking Update: ${booking.booking_ref}`, '', statusHtml.replace(booking.user_id, userRes.rows[0].name));
+      try {
+        await sendEmail(userRes.rows[0].email, `Booking Update: ${booking.booking_ref}`, '', statusHtml.replace(booking.user_id, userRes.rows[0].name));
+      } catch (emailErr) {
+        console.error(`Booking update email failed for ${booking.booking_ref}:`, emailErr.message);
+      }
     }
 
     return res.json({ message: `Booking status updated to "${status}" successfully.` });

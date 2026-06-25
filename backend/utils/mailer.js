@@ -1,11 +1,9 @@
 const nodemailer = require('nodemailer');
 
-const dns = require('dns').promises;
-
 let transporter = null;
 
-// Initialize the mailer asynchronously
-async function initMailer() {
+// Initialize the mailer synchronously to avoid race conditions
+function initMailer() {
   const senderEmail = process.env.SENDER_EMAIL;
   const senderPassword = process.env.SENDER_APP_PASSWORD;
 
@@ -14,18 +12,9 @@ async function initMailer() {
     return;
   }
 
-  let smtpHost = process.env.SMTP_HOST || 'smtp.gmail.com';
-
-  try {
-    // Manually force DNS resolution to strictly IPv4 to bypass Render's IPv6 ENETUNREACH issues
-    const { address } = await dns.lookup(smtpHost, { family: 4 });
-    smtpHost = address;
-    console.log(`✅ SMTP Host resolved to IPv4: ${smtpHost}`);
-  } catch (err) {
-    console.warn(`⚠️ Failed to resolve IPv4 for ${smtpHost}, falling back to default.`);
-  }
-
   // Use SMTP provider from env or fallback to Gmail
+  const smtpHost = process.env.SMTP_HOST || 'smtp.gmail.com';
+  
   transporter = nodemailer.createTransport({
     host: smtpHost,
     port: process.env.SMTP_PORT || 587,
@@ -34,18 +23,14 @@ async function initMailer() {
       user: senderEmail,
       pass: senderPassword,
     },
-    tls: {
-      rejectUnauthorized: false,
-      servername: process.env.SMTP_HOST || 'smtp.gmail.com' // Ensure SNI matches the hostname, not the raw IP
-    },
     // Add a 10 second timeout so it doesn't hang the server indefinitely if Render blocks the port
     connectionTimeout: 10000
   });
-  console.log('✅ Mailer initialized with real Gmail SMTP credentials.');
+  console.log(`✅ Mailer initialized with SMTP Host: ${smtpHost}`);
 }
 
 // Call init on module load
-initMailer().catch(err => console.error("Mailer init failed:", err));
+initMailer();
 
 /**
  * Send an email using Nodemailer.
@@ -56,11 +41,13 @@ initMailer().catch(err => console.error("Mailer init failed:", err));
  */
 async function sendEmail(to, subject, text, html = '') {
   if (!transporter) {
-    throw new Error('SMTP Connection Error: Server email credentials are not configured in environment variables.');
+    throw new Error('SMTP Error: Email credentials are not configured in environment variables. Check SENDER_EMAIL and SENDER_APP_PASSWORD.');
   }
 
   const senderEmail = process.env.SENDER_EMAIL;
   const fromAddress = process.env.SMTP_FROM || `"Travel Loyalty Team" <${senderEmail}>`;
+
+  console.log(`⏳ Attempting to send email to ${to}...`);
 
   try {
     const info = await transporter.sendMail({
@@ -71,21 +58,22 @@ async function sendEmail(to, subject, text, html = '') {
       html: html || text, // Fallback to text if html is empty
     });
 
-    console.log(`📧 Email sent successfully to ${to}`);
+    console.log(`✅ Email sent successfully to ${to}`);
     console.log(`   Message ID: ${info.messageId}`);
-    
-    // If using Ethereal, log the URL to view the email
-    if (process.env.SMTP_HOST === 'smtp.ethereal.email') {
-      console.log(`   Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
-    }
+    console.log(`   Provider Response: ${info.response}`);
 
-    return { status: "success", message: "Email sent successfully" };
+    return { status: "success", message: "Email sent successfully", info };
   } catch (err) {
-    console.error('❌ Error sending email:', err);
+    console.error('❌ Error sending email:');
+    console.error(`   Message: ${err.message}`);
+    console.error(`   Stack: ${err.stack}`);
+    
     if (err.responseCode === 535) {
-      throw new Error('SMTP Authentication Error: Invalid Gmail credentials or App Password not configured.');
+      throw new Error('SMTP Authentication Error: Invalid credentials provided. Check your password/API Key.');
     }
-    throw new Error(`An unexpected error occurred while sending email: ${err.message}`);
+    
+    // Throw the raw error so the route can handle it
+    throw err;
   }
 }
 

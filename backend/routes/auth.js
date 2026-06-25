@@ -132,8 +132,11 @@ router.post('/register', async (req, res) => {
       <p>The Travel Loyalty Team</p>
     `;
     
-    sendEmail(email.toLowerCase().trim(), 'Welcome to Travel Rewards!', '', welcomeHtml)
-      .catch(err => console.error('Background welcome email failed:', err.message));
+    try {
+      await sendEmail(email.toLowerCase().trim(), 'Welcome to Travel Rewards!', '', welcomeHtml);
+    } catch (emailErr) {
+      console.error('Welcome email failed, but registration will continue:', emailErr.message);
+    }
 
     return res.status(201).json({
       message: 'User registered successfully!',
