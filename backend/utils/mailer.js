@@ -4,8 +4,8 @@ let transporter = null;
 
 // Initialize the mailer synchronously to avoid race conditions
 function initMailer() {
-  const senderEmail = process.env.SENDER_EMAIL;
-  const senderPassword = process.env.SENDER_APP_PASSWORD;
+  const senderEmail = process.env.SENDER_EMAIL || process.env.GMAIL_USER || process.env.VITE_GMAIL_USER;
+  const senderPassword = process.env.SENDER_APP_PASSWORD || process.env.GMAIL_PASS || process.env.VITE_GMAIL_PASS;
 
   if (!senderEmail || !senderPassword) {
     console.warn('⚠️ Server email credentials are not configured in environment variables.');
@@ -41,10 +41,10 @@ initMailer();
  */
 async function sendEmail(to, subject, text, html = '') {
   if (!transporter) {
-    throw new Error('SMTP Error: Email credentials are not configured in environment variables. Check SENDER_EMAIL and SENDER_APP_PASSWORD.');
+    throw new Error('SMTP Error: Email credentials are not configured in environment variables. Check SENDER_EMAIL/GMAIL_USER and SENDER_APP_PASSWORD/GMAIL_PASS.');
   }
 
-  const senderEmail = process.env.SENDER_EMAIL;
+  const senderEmail = process.env.SENDER_EMAIL || process.env.GMAIL_USER || process.env.VITE_GMAIL_USER;
   const fromAddress = process.env.SMTP_FROM || `"Travel Loyalty Team" <${senderEmail}>`;
 
   console.log(`⏳ Attempting to send email to ${to}...`);
