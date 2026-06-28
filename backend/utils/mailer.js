@@ -12,13 +12,13 @@ function initMailer() {
     return;
   }
 
-  // Use SMTP provider from env or fallback to Gmail
-  const smtpHost = process.env.SMTP_HOST || 'smtp.gmail.com';
+  // Force Gmail SMTP exactly like the referral system to avoid Brevo conflicts
+  const smtpHost = 'smtp.gmail.com';
   
   transporter = nodemailer.createTransport({
     host: smtpHost,
-    port: process.env.SMTP_PORT || 587,
-    secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
+    port: 465, // Force secure port for Gmail
+    secure: true,
     auth: {
       user: senderEmail,
       pass: senderPassword,
@@ -26,7 +26,7 @@ function initMailer() {
     // Add a 10 second timeout so it doesn't hang the server indefinitely if Render blocks the port
     connectionTimeout: 10000
   });
-  console.log(`✅ Mailer initialized with SMTP Host: ${smtpHost}`);
+  console.log(`✅ Mailer initialized with SMTP Host: ${smtpHost} (Forcing Gmail)`);
 }
 
 // Call init on module load
