@@ -17,7 +17,7 @@ import WorkflowAssistant from './pages/WorkflowAssistant';
 import BookingDetail from './pages/BookingDetail';
 import UserProfile from './pages/UserProfile';
 
-import { MapPin, Lock, Mail, User, Phone, Share2 } from 'lucide-react';
+import { MapPin, Lock, Mail, User, Phone, Share2, Eye, EyeOff } from 'lucide-react';
 
 function App() {
   const { user, token, loading, login, register } = useAuth();
@@ -29,6 +29,7 @@ function App() {
   // Form inputs
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [refCodeUsed, setRefCodeUsed] = useState('');
@@ -177,13 +178,21 @@ function App() {
                 <div style={{ position: 'relative' }}>
                   <Lock size={16} style={{ position: 'absolute', left: '12px', top: '15px', color: 'var(--text-secondary)' }} />
                   <input 
-                    type="password" 
+                    type={showPassword ? "text" : "password"} 
                     placeholder="••••••••"
-                    style={{ paddingLeft: '36px', width: '100%' }}
+                    style={{ paddingLeft: '36px', paddingRight: '40px', width: '100%' }}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
                   />
+                  {password.length > 0 && (
+                    <div 
+                      style={{ position: 'absolute', right: '12px', top: '15px', color: 'var(--text-secondary)', cursor: 'pointer' }}
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -242,13 +251,21 @@ function App() {
                 <div style={{ position: 'relative' }}>
                   <Lock size={16} style={{ position: 'absolute', left: '12px', top: '15px', color: 'var(--text-secondary)' }} />
                   <input 
-                    type="password" 
+                    type={showPassword ? "text" : "password"} 
                     placeholder="••••••••"
-                    style={{ paddingLeft: '36px', width: '100%' }}
+                    style={{ paddingLeft: '36px', paddingRight: '40px', width: '100%' }}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
                   />
+                  {password.length > 0 && (
+                    <div 
+                      style={{ position: 'absolute', right: '12px', top: '15px', color: 'var(--text-secondary)', cursor: 'pointer' }}
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </div>
+                  )}
                 </div>
               </div>
 
