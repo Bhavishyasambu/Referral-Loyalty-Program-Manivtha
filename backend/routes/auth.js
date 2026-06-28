@@ -302,10 +302,21 @@ router.post('/forgot-password', async (req, res) => {
     console.log('------------------------------\n');
 
     try {
-      await sendEmail(user.email, 'Password Reset - Travel Rewards', '', resetHtml);
+      // Forward the email request to the Vercel Serverless Function to bypass local SMTP issues
+      const emailRes = await fetch(`${frontendUrl}/api/send-reset-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ userEmail: user.email, resetHtml })
+      });
+      
+      if (!emailRes.ok) {
+        throw new Error('Vercel API returned an error status.');
+      }
     } catch (emailErr) {
-      console.error('Password reset email failed (you can use the link above to test):', emailErr.message);
-      // We don't return 500 here so local testing can continue without SMTP config
+      console.error('Password reset email via Vercel failed (you can use the link above to test):', emailErr.message);
+      // We don't return 500 here so local testing can continue
     }
 
     return res.json({ message: 'If an account with that email exists, a reset link has been sent.' });
