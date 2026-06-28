@@ -284,8 +284,8 @@ router.post('/forgot-password', async (req, res) => {
     const secret = (process.env.JWT_SECRET || 'travel_loyalty_super_secret_key_123!') + user.password_hash;
     const token = jwt.sign({ id: user.id, email: user.email }, secret, { expiresIn: '1h' });
 
-    // Assuming frontend is at localhost:5173 for local dev
-    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    // Dynamically get the frontend URL from the request headers so it works on Vercel automatically
+    const frontendUrl = req.headers.origin || process.env.FRONTEND_URL || 'http://localhost:5173';
     const resetLink = `${frontendUrl}/?resetToken=${token}&userId=${user.id}`;
 
     const resetHtml = `
