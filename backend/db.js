@@ -7,15 +7,22 @@ const bcrypt = require('bcryptjs');
 let dbClient = null;
 let dbType = 'sqlite'; // Default fallback
 
-// Parse environment variables
-const pgConfig = {
-  user: process.env.DB_USER || 'postgres',
-  host: process.env.DB_HOST || 'localhost',
-  database: process.env.DB_NAME || 'travel_loyalty',
-  password: process.env.DB_PASSWORD || 'postgres',
-  port: parseInt(process.env.DB_PORT || '5432'),
-  connectionTimeoutMillis: 2000 // Short timeout for fallback detection
-};
+// Parse environment variables (Support DATABASE_URL for cloud hosting like Render/Neon)
+const pgConfig = process.env.DATABASE_URL 
+  ? {
+      connectionString: process.env.DATABASE_URL,
+      ssl: { rejectUnauthorized: false }, // Required for cloud databases
+      connectionTimeoutMillis: 5000
+    }
+  : {
+      user: process.env.DB_USER || 'postgres',
+      host: process.env.DB_HOST || 'localhost',
+      database: process.env.DB_NAME || 'travel_loyalty',
+      password: process.env.DB_PASSWORD || 'postgres',
+      port: parseInt(process.env.DB_PORT || '5432'),
+      ssl: process.env.DB_HOST && process.env.DB_HOST !== 'localhost' ? { rejectUnauthorized: false } : false,
+      connectionTimeoutMillis: 5000 // Short timeout for fallback detection
+    };
 
 // SQLite file path
 const sqliteDbPath = path.join(__dirname, 'travel_loyalty.db');
