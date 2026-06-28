@@ -20,11 +20,13 @@ import UserProfile from './pages/UserProfile';
 import { MapPin, Lock, Mail, User, Phone, Share2, Eye, EyeOff } from 'lucide-react';
 
 function App() {
-  const { user, token, loading, login, register } = useAuth();
+  const { user, token, loading, login, register, forgotPassword, resetPassword } = useAuth();
   const [activePage, setActivePage] = useState('home');
 
-  // Auth pages view toggles
-  const [isRegisterView, setIsRegisterView] = useState(false);
+  // Auth pages view toggles ('login', 'register', 'forgot', 'reset')
+  const [authMode, setAuthMode] = useState('login');
+  const [resetToken, setResetToken] = useState('');
+  const [resetUserId, setResetUserId] = useState('');
 
   // Form inputs
   const [email, setEmail] = useState('');
@@ -38,6 +40,18 @@ function App() {
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
   const [authLoading, setAuthLoading] = useState(false);
+
+  useEffect(() => {
+    // Check for reset password token in URL
+    const params = new URLSearchParams(window.location.search);
+    const rToken = params.get('resetToken');
+    const uId = params.get('userId');
+    if (rToken && uId) {
+      setResetToken(rToken);
+      setResetUserId(uId);
+      setAuthMode('reset');
+    }
+  }, []);
 
   if (loading) {
     return (
@@ -96,6 +110,41 @@ function App() {
     }
   };
 
+  const handleForgotPasswordSubmit = async (e) => {
+    e.preventDefault();
+    setErrorMsg('');
+    setSuccessMsg('');
+    setAuthLoading(true);
+    try {
+      const res = await forgotPassword(email);
+      setSuccessMsg(res.message);
+    } catch (err) {
+      setErrorMsg(err.message);
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  const handleResetPasswordSubmit = async (e) => {
+    e.preventDefault();
+    setErrorMsg('');
+    setSuccessMsg('');
+    setAuthLoading(true);
+    try {
+      const res = await resetPassword(resetUserId, resetToken, password);
+      setSuccessMsg(res.message);
+      setTimeout(() => {
+        setAuthMode('login');
+        setPassword('');
+        window.history.replaceState({}, document.title, "/"); // Clear URL params
+      }, 3000);
+    } catch (err) {
+      setErrorMsg(err.message);
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
   // Render Authentication page if not signed in
   if (!token || !user) {
     return (
@@ -107,9 +156,10 @@ function App() {
             </div>
             <h2>Travel Rewards</h2>
             <p>
-              {isRegisterView 
-                ? 'Join our Referral & Loyalty program to earn bonuses.' 
-                : 'Sign in to access your referral stats, bookings, and rewards.'}
+              {authMode === 'register' && 'Join our Referral & Loyalty program to earn bonuses.'}
+              {authMode === 'login' && 'Sign in to access your referral stats, bookings, and rewards.'}
+              {authMode === 'forgot' && 'Enter your email to receive a password reset link.'}
+              {authMode === 'reset' && 'Enter your new password below.'}
             </p>
           </div>
 
@@ -125,7 +175,7 @@ function App() {
             </div>
           )}
 
-          {isRegisterView ? (
+          {authMode === 'register' && (
             /* Registration Form */
             <form onSubmit={handleRegisterSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div className="form-group">
@@ -219,7 +269,7 @@ function App() {
                 <span 
                   style={{ color: 'var(--brand-emerald)', cursor: 'pointer', fontWeight: 600 }}
                   onClick={() => {
-                    setIsRegisterView(false);
+                    setAuthMode('login');
                     setErrorMsg('');
                     setSuccessMsg('');
                   }}
@@ -228,7 +278,9 @@ function App() {
                 </span>
               </div>
             </form>
-          ) : (
+          )}
+
+          {authMode === 'login' && (
             /* Login Form */
             <form onSubmit={handleLoginSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div className="form-group">
@@ -274,11 +326,24 @@ function App() {
               </button>
 
               <div style={{ textAlign: 'center', fontSize: '13px', color: 'var(--text-secondary)', marginTop: '8px' }}>
+                <span 
+                  style={{ color: 'var(--brand-emerald)', cursor: 'pointer', fontWeight: 600 }}
+                  onClick={() => {
+                    setAuthMode('forgot');
+                    setErrorMsg('');
+                    setSuccessMsg('');
+                  }}
+                >
+                  Forgot Password?
+                </span>
+              </div>
+
+              <div style={{ textAlign: 'center', fontSize: '13px', color: 'var(--text-secondary)', marginTop: '8px' }}>
                 Don't have an account?{' '}
                 <span 
                   style={{ color: 'var(--brand-emerald)', cursor: 'pointer', fontWeight: 600 }}
                   onClick={() => {
-                    setIsRegisterView(true);
+                    setAuthMode('register');
                     setErrorMsg('');
                     setSuccessMsg('');
                   }}
@@ -286,6 +351,71 @@ function App() {
                   Create Account
                 </span>
               </div>
+            </form>
+          )}
+
+          {authMode === 'forgot' && (
+            <form onSubmit={handleForgotPasswordSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div className="form-group">
+                <label>Email Address</label>
+                <div style={{ position: 'relative' }}>
+                  <Mail size={16} style={{ position: 'absolute', left: '12px', top: '15px', color: 'var(--text-secondary)' }} />
+                  <input 
+                    type="email" 
+                    placeholder="name@example.com"
+                    style={{ paddingLeft: '36px', width: '100%' }}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+              <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '8px' }} disabled={authLoading}>
+                {authLoading ? 'Sending...' : 'Send Reset Link'}
+              </button>
+              <div style={{ textAlign: 'center', fontSize: '13px', color: 'var(--text-secondary)', marginTop: '8px' }}>
+                Remembered your password?{' '}
+                <span 
+                  style={{ color: 'var(--brand-emerald)', cursor: 'pointer', fontWeight: 600 }}
+                  onClick={() => {
+                    setAuthMode('login');
+                    setErrorMsg('');
+                    setSuccessMsg('');
+                  }}
+                >
+                  Sign In
+                </span>
+              </div>
+            </form>
+          )}
+
+          {authMode === 'reset' && (
+            <form onSubmit={handleResetPasswordSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div className="form-group">
+                <label>New Password</label>
+                <div style={{ position: 'relative' }}>
+                  <Lock size={16} style={{ position: 'absolute', left: '12px', top: '15px', color: 'var(--text-secondary)' }} />
+                  <input 
+                    type={showPassword ? "text" : "password"} 
+                    placeholder="••••••••"
+                    style={{ paddingLeft: '36px', paddingRight: '40px', width: '100%' }}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                  {password.length > 0 && (
+                    <div 
+                      style={{ position: 'absolute', right: '12px', top: '15px', color: 'var(--text-secondary)', cursor: 'pointer' }}
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </div>
+                  )}
+                </div>
+              </div>
+              <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '8px' }} disabled={authLoading}>
+                {authLoading ? 'Resetting...' : 'Reset Password'}
+              </button>
             </form>
           )}
         </div>

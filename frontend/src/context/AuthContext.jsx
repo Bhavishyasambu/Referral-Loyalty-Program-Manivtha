@@ -103,6 +103,36 @@ export function AuthProvider({ children }) {
     return data;
   };
 
+  const forgotPassword = async (email) => {
+    const res = await fetch(`${API_BASE}/auth/forgot-password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message || 'Failed to send reset link.');
+    }
+    return data;
+  };
+
+  const resetPassword = async (userId, token, newPassword) => {
+    const res = await fetch(`${API_BASE}/auth/reset-password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ userId, token, newPassword })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message || 'Failed to reset password.');
+    }
+    return data;
+  };
+
   const logout = () => {
     setToken(null);
     setUser(null);
@@ -132,7 +162,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ token, user, customer, loading, login, register, logout, refreshProfile, isDarkMode, toggleTheme }}>
+    <AuthContext.Provider value={{ token, user, customer, loading, login, register, logout, refreshProfile, isDarkMode, toggleTheme, forgotPassword, resetPassword }}>
       {children}
     </AuthContext.Provider>
   );

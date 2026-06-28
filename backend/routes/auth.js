@@ -264,4 +264,92 @@ router.put('/profile', verifyToken, async (req, res) => {
   }
 });
 
+// POST /api/auth/forgot-password
+router.post('/forgot-password', async (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(400).json({ message: 'Email is required.' });
+  }
+
+  try {
+    const userQuery = await db.query('SELECT id, email, name, password_hash FROM users WHERE email = $1', [email.toLowerCase().trim()]);
+    if (userQuery.rows.length === 0) {
+      // Return 200 even if user not found to prevent email enumeration
+      return res.json({ message: 'If an account with that email exists, a reset link has been sent.' });
+    }
+
+    const user = userQuery.rows[0];
+    
+    // Create a one-time use token utilizing the current password hash
+    const secret = (process.env.JWT_SECRET || 'travel_loyalty_super_secret_key_123!') + user.password_hash;
+    const token = jwt.sign({ id: user.id, email: user.email }, secret, { expiresIn: '1h' });
+
+    // Assuming frontend is at localhost:5173 for local dev
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    const resetLink = `${frontendUrl}/?resetToken=${token}&userId=${user.id}`;
+
+    const resetHtml = `
+      <h2>Password Reset Request</h2>
+      <p>Hi ${user.name},</p>
+      <p>We received a request to reset the password for your Travel Rewards account.</p>
+      <p>Click the link below to set a new password. This link will expire in 1 hour.</p>
+      <a href="${resetLink}" style="display: inline-block; padding: 10px 20px; background-color: #059669; color: white; text-decoration: none; border-radius: 5px;">Reset Password</a>
+      <p>If you did not request this, you can safely ignore this email.</p>
+    `;
+
+    try {
+      await sendEmail(user.email, 'Password Reset - Travel Rewards', '', resetHtml);
+    } catch (emailErr) {
+      console.error('Password reset email failed:', emailErr.message);
+      return res.status(500).json({ message: 'Failed to send password reset email.' });
+    }
+
+    return res.json({ message: 'If an account with that email exists, a reset link has been sent.' });
+  } catch (err) {
+    console.error('Forgot password error:', err);
+    return res.status(500).json({ message: 'Server error processing request.' });
+  }
+});
+
+// POST /api/auth/reset-password
+router.post('/reset-password', async (req, res) => {
+  const { userId, token, newPassword } = req.body;
+
+  if (!userId || !token || !newPassword) {
+    return res.status(400).json({ message: 'User ID, token, and new password are required.' });
+  }
+
+  if (newPassword.length < 6) {
+    return res.status(400).json({ message: 'Password must be at least 6 characters.' });
+  }
+
+  try {
+    const userQuery = await db.query('SELECT id, email, password_hash FROM users WHERE id = $1', [userId]);
+    if (userQuery.rows.length === 0) {
+      return res.status(400).json({ message: 'Invalid or expired reset token.' });
+    }
+
+    const user = userQuery.rows[0];
+    const secret = (process.env.JWT_SECRET || 'travel_loyalty_super_secret_key_123!') + user.password_hash;
+
+    try {
+      jwt.verify(token, secret);
+    } catch (jwtErr) {
+      return res.status(400).json({ message: 'Invalid or expired reset token.' });
+    }
+
+    // Token is valid, hash new password
+    const salt = await bcrypt.genSalt(10);
+    const newPasswordHash = await bcrypt.hash(newPassword, salt);
+
+    // Update password in db
+    await db.query('UPDATE users SET password_hash = $1 WHERE id = $2', [newPasswordHash, user.id]);
+
+    return res.json({ message: 'Password has been reset successfully. You can now log in.' });
+  } catch (err) {
+    console.error('Reset password error:', err);
+    return res.status(500).json({ message: 'Server error during password reset.' });
+  }
+});
+
 module.exports = router;
