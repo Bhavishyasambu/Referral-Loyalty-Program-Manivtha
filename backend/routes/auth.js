@@ -297,11 +297,15 @@ router.post('/forgot-password', async (req, res) => {
       <p>If you did not request this, you can safely ignore this email.</p>
     `;
 
+    console.log('\n--- DEVELOPMENT RESET LINK ---');
+    console.log(resetLink);
+    console.log('------------------------------\n');
+
     try {
       await sendEmail(user.email, 'Password Reset - Travel Rewards', '', resetHtml);
     } catch (emailErr) {
-      console.error('Password reset email failed:', emailErr.message);
-      return res.status(500).json({ message: 'Failed to send password reset email.' });
+      console.error('Password reset email failed (you can use the link above to test):', emailErr.message);
+      // We don't return 500 here so local testing can continue without SMTP config
     }
 
     return res.json({ message: 'If an account with that email exists, a reset link has been sent.' });
