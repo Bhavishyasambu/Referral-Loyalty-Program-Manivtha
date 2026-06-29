@@ -81,7 +81,7 @@ router.post('/', verifyAdmin, async (req, res) => {
     return res.status(201).json({ message: 'Campaign created successfully!' });
   } catch (err) {
     console.error('Create campaign error:', err);
-    return res.status(500).json({ message: 'Server error creating campaign.', error: err.message });
+    return res.status(500).json({ message: `Backend 500 Error: ${err.message}`, error: err.message });
   }
 });
 

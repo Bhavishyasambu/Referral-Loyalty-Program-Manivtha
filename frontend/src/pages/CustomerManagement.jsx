@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth, API_BASE } from '../context/AuthContext';
 import Header from '../components/Header';
 import { Search, Edit2, ShieldAlert, Award, User, Phone, Mail, DollarSign } from 'lucide-react';

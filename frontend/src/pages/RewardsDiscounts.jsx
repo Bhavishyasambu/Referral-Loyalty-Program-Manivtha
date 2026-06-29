@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth, API_BASE } from '../context/AuthContext';
 import Header from '../components/Header';
 import { Gift, Award, CheckCircle, Tag, DollarSign, Calendar } from 'lucide-react';

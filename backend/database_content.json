@@ -1,0 +1,696 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "email": "admin@travelcompany.com",
+      "password_hash": "$2a$10$cVR9TC6Uc041cZf0Q40N1OArVARjzzhUQNdZ.lCgFuhQsUNCSMx.u",
+      "name": "Administrator",
+      "role": "admin",
+      "created_at": "2026-06-12 17:05:41"
+    },
+    {
+      "id": 2,
+      "email": "custA_1781283992762@test.com",
+      "password_hash": "$2a$10$9pS/J/xRffaysm0RPrHxFOSpifVwpomAE.x2/WCxpCj7bX6RK.8Yq",
+      "name": "Alice Johnson",
+      "role": "customer",
+      "created_at": "2026-06-12 17:06:33"
+    },
+    {
+      "id": 3,
+      "email": "custB_1781283992762@test.com",
+      "password_hash": "$2a$10$6cWcMH9n2u5Ym7huBZHbq.FmYBWgsg3N6UW76TO70Y9XqtsJx6rNW",
+      "name": "Bob Smith",
+      "role": "customer",
+      "created_at": "2026-06-12 17:06:33"
+    },
+    {
+      "id": 4,
+      "email": "bhavishyasambu26@gmail.com",
+      "password_hash": "$2a$10$L5i4ggK1H1CgwLJJvVG5veCgHMrQXEcNOo1nRN/Gg7P7GxtDwFXqa",
+      "name": "Sambu Bhavishya",
+      "role": "customer",
+      "created_at": "2026-06-12 17:14:41"
+    },
+    {
+      "id": 5,
+      "email": "dattathreya52321@gmail.com",
+      "password_hash": "$2a$10$Zu7sOvw.ksddQNvVW67bpOuI1HkOLTiSzkqPhvoJQ4kmruu947dP6",
+      "name": "SVD",
+      "role": "customer",
+      "created_at": "2026-06-24 06:56:25"
+    },
+    {
+      "id": 6,
+      "email": "anithasambu8@gmail.com",
+      "password_hash": "$2a$10$.yrUb9jdruaXaJOq585zUeyIcJLXv9N5fxkZtWWpyaRYaddv0G8vi",
+      "name": "Ani",
+      "role": "customer",
+      "created_at": "2026-06-24 07:17:02"
+    }
+  ],
+  "campaigns": [
+    {
+      "id": 1,
+      "name": "Summer Double Points",
+      "code": "SUMMER2X",
+      "description": "Earn double points on all bookings made during June and July!",
+      "points_multiplier": 2,
+      "discount_percent": 0,
+      "start_date": "2026-06-01",
+      "end_date": "2026-07-31",
+      "is_active": 1,
+      "created_at": "2026-06-12 17:05:40"
+    },
+    {
+      "id": 2,
+      "name": "Monsoon Escape Discount",
+      "code": "RAINY10",
+      "description": "Get 10% off and 1.5x points on hill station trips.",
+      "points_multiplier": 1.5,
+      "discount_percent": 10,
+      "start_date": "2026-06-01",
+      "end_date": "2026-08-31",
+      "is_active": 1,
+      "created_at": "2026-06-12 17:05:40"
+    },
+    {
+      "id": 3,
+      "name": "Year End Special",
+      "code": "WINTER15",
+      "description": "1.2x points and 15% discount on international tours.",
+      "points_multiplier": 1.2,
+      "discount_percent": 15,
+      "start_date": "2026-11-01",
+      "end_date": "2026-12-31",
+      "is_active": 1,
+      "created_at": "2026-06-12 17:05:40"
+    },
+    {
+      "id": 4,
+      "name": "Enjoy Weekends",
+      "code": "WEEKEND10E",
+      "description": "",
+      "points_multiplier": 1,
+      "discount_percent": 5,
+      "start_date": "2026-06-17",
+      "end_date": "2026-07-11",
+      "is_active": 0,
+      "created_at": "2026-06-16 05:14:43"
+    }
+  ],
+  "referrals": [
+    {
+      "id": 1,
+      "referrer_id": 1,
+      "referee_id": 2,
+      "code_used": "TRV-ALIC8061",
+      "status": "Completed",
+      "reward_points_referrer": 250,
+      "reward_points_referee": 100,
+      "created_at": "2026-06-12 17:06:33"
+    },
+    {
+      "id": 2,
+      "referrer_id": 3,
+      "referee_id": 4,
+      "code_used": "TRV-SAMB7832",
+      "status": "Completed",
+      "reward_points_referrer": 250,
+      "reward_points_referee": 100,
+      "created_at": "2026-06-24 06:56:25"
+    }
+  ],
+  "customers": [
+    {
+      "id": 1,
+      "user_id": 2,
+      "phone": "9876543210",
+      "referral_code": "TRV-ALIC8061",
+      "referred_by_id": null,
+      "tier": "Bronze",
+      "loyalty_points": 250,
+      "total_spent": 0,
+      "created_at": "2026-06-12 17:06:33"
+    },
+    {
+      "id": 2,
+      "user_id": 3,
+      "phone": "8765432109",
+      "referral_code": "TRV-BOBS4875",
+      "referred_by_id": 1,
+      "tier": "Silver",
+      "loyalty_points": 206,
+      "total_spent": 1335,
+      "created_at": "2026-06-12 17:06:33"
+    },
+    {
+      "id": 3,
+      "user_id": 4,
+      "phone": "9390365163",
+      "referral_code": "TRV-SAMB7832",
+      "referred_by_id": null,
+      "tier": "Gold",
+      "loyalty_points": 4425,
+      "total_spent": 17202.5,
+      "created_at": "2026-06-12 17:14:41"
+    },
+    {
+      "id": 4,
+      "user_id": 5,
+      "phone": "6300617835",
+      "referral_code": "TRV-SVD9723",
+      "referred_by_id": 3,
+      "tier": "Gold",
+      "loyalty_points": 2300,
+      "total_spent": 11000,
+      "created_at": "2026-06-24 06:56:25"
+    },
+    {
+      "id": 5,
+      "user_id": 6,
+      "phone": "8367098696",
+      "referral_code": "TRV-ANI3643",
+      "referred_by_id": null,
+      "tier": "Bronze",
+      "loyalty_points": 0,
+      "total_spent": 0,
+      "created_at": "2026-06-24 07:17:02"
+    }
+  ],
+  "redemptions": [
+    {
+      "id": 1,
+      "customer_id": 2,
+      "reward_id": 1,
+      "points_spent": 150,
+      "code_generated": "LOY-RED-10MXEY",
+      "status": "Redeemed",
+      "redeemed_at": "2026-06-12 17:06:33"
+    },
+    {
+      "id": 2,
+      "customer_id": 3,
+      "reward_id": 2,
+      "points_spent": 300,
+      "code_generated": "LOY-RED-12024E",
+      "status": "Redeemed",
+      "redeemed_at": "2026-06-15 09:14:27"
+    },
+    {
+      "id": 3,
+      "customer_id": 3,
+      "reward_id": 4,
+      "points_spent": 200,
+      "code_generated": "LOY-RED-4S6LRI",
+      "status": "Active",
+      "redeemed_at": "2026-06-15 09:32:39"
+    },
+    {
+      "id": 4,
+      "customer_id": 3,
+      "reward_id": 1,
+      "points_spent": 150,
+      "code_generated": "LOY-RED-R4BNUP",
+      "status": "Active",
+      "redeemed_at": "2026-06-15 09:57:47"
+    },
+    {
+      "id": 5,
+      "customer_id": 3,
+      "reward_id": 1,
+      "points_spent": 150,
+      "code_generated": "LOY-RED-2V0CIT",
+      "status": "Active",
+      "redeemed_at": "2026-06-19 09:04:54"
+    }
+  ],
+  "notifications": [
+    {
+      "id": 1,
+      "user_id": 2,
+      "title": "Welcome to Travel Rewards!",
+      "message": "Thank you for joining our Referral & Loyalty Program. Start booking trips to earn points and upgrade your tier!",
+      "type": "System",
+      "is_read": 0,
+      "created_at": "2026-06-12 17:06:33"
+    },
+    {
+      "id": 2,
+      "user_id": 3,
+      "title": "Referral Bonus Applied!",
+      "message": "Welcome! You earned 100 bonus points for signing up via referral.",
+      "type": "Referral",
+      "is_read": 0,
+      "created_at": "2026-06-12 17:06:33"
+    },
+    {
+      "id": 3,
+      "user_id": 2,
+      "title": "New Referral Signup!",
+      "message": "Bob Smith signed up using your referral code. You will receive 250 loyalty points once they complete their first trip!",
+      "type": "Referral",
+      "is_read": 0,
+      "created_at": "2026-06-12 17:06:33"
+    },
+    {
+      "id": 4,
+      "user_id": 3,
+      "title": "Welcome to Travel Rewards!",
+      "message": "Thank you for joining our Referral & Loyalty Program. Start booking trips to earn points and upgrade your tier!",
+      "type": "System",
+      "is_read": 0,
+      "created_at": "2026-06-12 17:06:33"
+    },
+    {
+      "id": 5,
+      "user_id": 3,
+      "title": "Tier Upgraded to Silver!",
+      "message": "Congratulations! You have reached Silver tier. You will now earn a 1.2x point multiplier on your future bookings!",
+      "type": "Loyalty",
+      "is_read": 0,
+      "created_at": "2026-06-12 17:06:33"
+    },
+    {
+      "id": 6,
+      "user_id": 2,
+      "title": "Referral Points Unlocked!",
+      "message": "Congratulations! Bob Smith completed their first booking. You received 250 loyalty points!",
+      "type": "Referral",
+      "is_read": 0,
+      "created_at": "2026-06-12 17:06:33"
+    },
+    {
+      "id": 7,
+      "user_id": 3,
+      "title": "Booking Confirmed!",
+      "message": "Your trip Scenic Swiss Alps Tour on 2026-07-15 is confirmed. You earned 240 loyalty points.",
+      "type": "Booking",
+      "is_read": 0,
+      "created_at": "2026-06-12 17:06:33"
+    },
+    {
+      "id": 8,
+      "user_id": 3,
+      "title": "Reward Redeemed!",
+      "message": "Successfully redeemed $15 Off Ride for 150 points. Your code is LOY-RED-10MXEY.",
+      "type": "Loyalty",
+      "is_read": 0,
+      "created_at": "2026-06-12 17:06:33"
+    },
+    {
+      "id": 9,
+      "user_id": 3,
+      "title": "Booking Confirmed!",
+      "message": "Your trip City Tour Escape on 2026-07-20 is confirmed. You earned 16 loyalty points.",
+      "type": "Booking",
+      "is_read": 0,
+      "created_at": "2026-06-12 17:06:33"
+    },
+    {
+      "id": 10,
+      "user_id": 4,
+      "title": "Welcome to Travel Rewards!",
+      "message": "Thank you for joining our Referral & Loyalty Program. Start booking trips to earn points and upgrade your tier!",
+      "type": "System",
+      "is_read": 1,
+      "created_at": "2026-06-12 17:14:41"
+    },
+    {
+      "id": 11,
+      "user_id": 4,
+      "title": "Booking Confirmed!",
+      "message": "Your trip \"Tirupathi\" on 2026-06-15 is confirmed. You paid $100.00 and earned 10 loyalty points.",
+      "type": "Booking",
+      "is_read": 0,
+      "created_at": "2026-06-15 08:28:51"
+    },
+    {
+      "id": 12,
+      "user_id": 4,
+      "title": "Tier Adjusted by Admin",
+      "message": "Your loyalty tier has been manually updated to Gold.",
+      "type": "Loyalty",
+      "is_read": 0,
+      "created_at": "2026-06-15 09:13:39"
+    },
+    {
+      "id": 13,
+      "user_id": 4,
+      "title": "Loyalty Points Adjusted",
+      "message": "Your points balance was updated to 500 by an administrator.",
+      "type": "Loyalty",
+      "is_read": 0,
+      "created_at": "2026-06-15 09:13:39"
+    },
+    {
+      "id": 14,
+      "user_id": 4,
+      "title": "Reward Redeemed!",
+      "message": "Successfully redeemed \"$40 Travel Voucher\" for 300 points. Your voucher code is LOY-RED-12024E. Use it at checkout for $40.00 off!",
+      "type": "Loyalty",
+      "is_read": 0,
+      "created_at": "2026-06-15 09:14:27"
+    },
+    {
+      "id": 15,
+      "user_id": 4,
+      "title": "Booking Confirmed!",
+      "message": "Your trip \"VIZAG\" on 2026-06-16 is confirmed ($40 Travel Voucher voucher (-$40.00)). You paid $460.00 and earned 69 loyalty points.",
+      "type": "Booking",
+      "is_read": 0,
+      "created_at": "2026-06-15 09:15:32"
+    },
+    {
+      "id": 16,
+      "user_id": 4,
+      "title": "Reward Redeemed!",
+      "message": "Successfully redeemed \"Free Sedan Upgrade\" for 200 points. Your voucher code is LOY-RED-4S6LRI. Use it at checkout for $25.00 off!",
+      "type": "Loyalty",
+      "is_read": 0,
+      "created_at": "2026-06-15 09:32:39"
+    },
+    {
+      "id": 17,
+      "user_id": 4,
+      "title": "Booking Confirmed!",
+      "message": "Your trip \"Holiday\" on 2026-06-16 is confirmed. You paid $142.50 and earned 21 loyalty points.",
+      "type": "Booking",
+      "is_read": 0,
+      "created_at": "2026-06-15 09:51:18"
+    },
+    {
+      "id": 18,
+      "user_id": 4,
+      "title": "Loyalty Points Adjusted",
+      "message": "Your points balance was updated to 2000 by an administrator.",
+      "type": "Loyalty",
+      "is_read": 0,
+      "created_at": "2026-06-15 09:57:24"
+    },
+    {
+      "id": 19,
+      "user_id": 4,
+      "title": "Reward Redeemed!",
+      "message": "Successfully redeemed \"$15 Off Ride\" for 150 points. Your voucher code is LOY-RED-R4BNUP. Use it at checkout for $15.00 off!",
+      "type": "Loyalty",
+      "is_read": 0,
+      "created_at": "2026-06-15 09:57:47"
+    },
+    {
+      "id": 20,
+      "user_id": 4,
+      "title": "Booking Confirmed!",
+      "message": "Your trip \"Sunday\" on 2026-06-16 is confirmed. You paid $16500.00 and earned 2475 loyalty points.",
+      "type": "Booking",
+      "is_read": 0,
+      "created_at": "2026-06-15 10:14:07"
+    },
+    {
+      "id": 21,
+      "user_id": 2,
+      "title": "New Campaign: Enjoy Weekends!",
+      "message": "Use code WEEKEND10E to unlock rewards (5% off)! Valid from 2026-06-17 to 2026-07-11.",
+      "type": "System",
+      "is_read": 0,
+      "created_at": "2026-06-16 05:14:43"
+    },
+    {
+      "id": 22,
+      "user_id": 3,
+      "title": "New Campaign: Enjoy Weekends!",
+      "message": "Use code WEEKEND10E to unlock rewards (5% off)! Valid from 2026-06-17 to 2026-07-11.",
+      "type": "System",
+      "is_read": 0,
+      "created_at": "2026-06-16 05:14:43"
+    },
+    {
+      "id": 23,
+      "user_id": 4,
+      "title": "New Campaign: Enjoy Weekends!",
+      "message": "Use code WEEKEND10E to unlock rewards (5% off)! Valid from 2026-06-17 to 2026-07-11.",
+      "type": "System",
+      "is_read": 0,
+      "created_at": "2026-06-16 05:14:43"
+    },
+    {
+      "id": 24,
+      "user_id": 4,
+      "title": "Reward Redeemed!",
+      "message": "Successfully redeemed \"₹15 Off Ride\" for 150 points. Your voucher code is LOY-RED-2V0CIT. Use it at checkout for $15.00 off!",
+      "type": "Loyalty",
+      "is_read": 0,
+      "created_at": "2026-06-19 09:04:54"
+    },
+    {
+      "id": 25,
+      "user_id": 5,
+      "title": "Referral Bonus Applied!",
+      "message": "Welcome! You earned 100 bonus points for signing up via referral.",
+      "type": "Referral",
+      "is_read": 0,
+      "created_at": "2026-06-24 06:56:25"
+    },
+    {
+      "id": 26,
+      "user_id": 4,
+      "title": "New Referral Signup!",
+      "message": "SVD signed up using your referral code. You will receive 250 loyalty points once they complete their first trip!",
+      "type": "Referral",
+      "is_read": 0,
+      "created_at": "2026-06-24 06:56:25"
+    },
+    {
+      "id": 27,
+      "user_id": 5,
+      "title": "Welcome to Travel Rewards!",
+      "message": "Thank you for joining our Referral & Loyalty Program. Your referral code is TRV-SVD9723. Start booking trips to earn points!",
+      "type": "System",
+      "is_read": 0,
+      "created_at": "2026-06-24 06:56:25"
+    },
+    {
+      "id": 28,
+      "user_id": 5,
+      "title": "Tier Upgraded to Gold!",
+      "message": "Congratulations! You have reached Gold tier. You will now earn a 1.5x point multiplier on your future bookings!",
+      "type": "Loyalty",
+      "is_read": 0,
+      "created_at": "2026-06-24 06:58:14"
+    },
+    {
+      "id": 29,
+      "user_id": 4,
+      "title": "Referral Points Unlocked!",
+      "message": "Congratulations! SVD completed their first booking. You received 250 loyalty points!",
+      "type": "Referral",
+      "is_read": 0,
+      "created_at": "2026-06-24 06:58:14"
+    },
+    {
+      "id": 30,
+      "user_id": 5,
+      "title": "Booking Confirmed!",
+      "message": "Your trip \"wsdcv\" on 2026-06-23 is confirmed (Summer Double Points (0% off)). You paid $11000.00 and earned 2200 loyalty points.",
+      "type": "Booking",
+      "is_read": 0,
+      "created_at": "2026-06-24 06:58:14"
+    },
+    {
+      "id": 31,
+      "user_id": 6,
+      "title": "Welcome to Travel Rewards!",
+      "message": "Thank you for joining our Referral & Loyalty Program. Your referral code is TRV-ANI3643. Start booking trips to earn points!",
+      "type": "System",
+      "is_read": 0,
+      "created_at": "2026-06-24 07:17:02"
+    }
+  ],
+  "bookings": [
+    {
+      "id": 1,
+      "customer_id": 2,
+      "booking_ref": "TRV-B-VNE33ERL",
+      "tour_name": "Scenic Swiss Alps Tour",
+      "amount": 1200,
+      "pickup_location": "Geneva Airport Terminal 1",
+      "drop_location": "Chamonix Mountain Resort",
+      "vehicle_type": "Luxury SUV",
+      "driver_name": "Hans Müller",
+      "trip_date": "2026-07-15",
+      "points_earned": 240,
+      "status": "Confirmed",
+      "campaign_id": 1,
+      "created_at": "2026-06-12 17:06:33"
+    },
+    {
+      "id": 2,
+      "customer_id": 2,
+      "booking_ref": "TRV-B-DTFETXH0",
+      "tour_name": "City Tour Escape",
+      "amount": 135,
+      "pickup_location": "Geneva Airport Terminal 1",
+      "drop_location": "Central Plaza Hotel",
+      "vehicle_type": "Sedan",
+      "driver_name": "John Doe",
+      "trip_date": "2026-07-20",
+      "points_earned": 16,
+      "status": "Confirmed",
+      "campaign_id": null,
+      "created_at": "2026-06-12 17:06:33"
+    },
+    {
+      "id": 3,
+      "customer_id": 3,
+      "booking_ref": "TRV-B-67BTOQ9U",
+      "tour_name": "Tirupathi",
+      "amount": 100,
+      "pickup_location": "Hydearabad",
+      "drop_location": "Tirupathi",
+      "vehicle_type": "SUV",
+      "driver_name": "John Doe",
+      "trip_date": "2026-06-15",
+      "points_earned": 10,
+      "status": "Confirmed",
+      "campaign_id": null,
+      "created_at": "2026-06-15 08:28:51"
+    },
+    {
+      "id": 4,
+      "customer_id": 3,
+      "booking_ref": "TRV-B-V9OQ5X9Y",
+      "tour_name": "VIZAG",
+      "amount": 460,
+      "pickup_location": "Hyderabad",
+      "drop_location": "Vizag",
+      "vehicle_type": "SUV",
+      "driver_name": "John Doe",
+      "trip_date": "2026-06-16",
+      "points_earned": 69,
+      "status": "Confirmed",
+      "campaign_id": null,
+      "created_at": "2026-06-15 09:15:32"
+    },
+    {
+      "id": 5,
+      "customer_id": 3,
+      "booking_ref": "TRV-B-E54TFWND",
+      "tour_name": "Holiday",
+      "amount": 142.5,
+      "pickup_location": "Hyderabad",
+      "drop_location": "Nellore",
+      "vehicle_type": "SUV",
+      "driver_name": "John Doe",
+      "trip_date": "2026-06-16",
+      "points_earned": 21,
+      "status": "Confirmed",
+      "campaign_id": null,
+      "created_at": "2026-06-15 09:51:18"
+    },
+    {
+      "id": 6,
+      "customer_id": 3,
+      "booking_ref": "TRV-B-M1UT7GNB",
+      "tour_name": "Sunday",
+      "amount": 16500,
+      "pickup_location": "Hyderabad",
+      "drop_location": "Mysore",
+      "vehicle_type": "SUV",
+      "driver_name": "John Doe",
+      "trip_date": "2026-06-16",
+      "points_earned": 2475,
+      "status": "Confirmed",
+      "campaign_id": null,
+      "created_at": "2026-06-15 10:14:07"
+    },
+    {
+      "id": 7,
+      "customer_id": 4,
+      "booking_ref": "TRV-B-N40IZ7YM",
+      "tour_name": "wsdcv",
+      "amount": 11000,
+      "pickup_location": "Hyderabad",
+      "drop_location": "Mysore",
+      "vehicle_type": "SUV",
+      "driver_name": "John Doe",
+      "trip_date": "2026-06-23",
+      "points_earned": 2200,
+      "status": "Confirmed",
+      "campaign_id": 1,
+      "created_at": "2026-06-24 06:58:14"
+    }
+  ],
+  "rewards": [
+    {
+      "id": 1,
+      "name": "₹15 Off Ride",
+      "description": "Get ₹15 off on your next city tour or airport pickup booking.",
+      "points_cost": 150,
+      "discount_value": 15,
+      "reward_type": "Voucher",
+      "is_active": 1
+    },
+    {
+      "id": 2,
+      "name": "₹40 Travel Voucher",
+      "description": "Redeem ₹40 discount on any outstation tour booking.",
+      "points_cost": 300,
+      "discount_value": 40,
+      "reward_type": "Voucher",
+      "is_active": 1
+    },
+    {
+      "id": 3,
+      "name": "₹100 Luxury Getaway Coupon",
+      "description": "Get a massive ₹100 off on premium luxury packages.",
+      "points_cost": 600,
+      "discount_value": 100,
+      "reward_type": "Voucher",
+      "is_active": 1
+    },
+    {
+      "id": 4,
+      "name": "Free Sedan Upgrade",
+      "description": "Upgrade your vehicle from Hatchback to Sedan for free (valued at ₹25).",
+      "points_cost": 200,
+      "discount_value": 25,
+      "reward_type": "FreeUpgrade",
+      "is_active": 1
+    }
+  ],
+  "sqlite_sequence": [
+    {
+      "name": "campaigns",
+      "seq": 4
+    },
+    {
+      "name": "rewards",
+      "seq": 4
+    },
+    {
+      "name": "users",
+      "seq": 6
+    },
+    {
+      "name": "customers",
+      "seq": 5
+    },
+    {
+      "name": "notifications",
+      "seq": 31
+    },
+    {
+      "name": "referrals",
+      "seq": 2
+    },
+    {
+      "name": "bookings",
+      "seq": 7
+    },
+    {
+      "name": "redemptions",
+      "seq": 5
+    }
+  ],
+  "booking_notes": []
+}

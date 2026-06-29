@@ -71,7 +71,7 @@ app.use((err, req, res, next) => {
 async function startServer() {
   await db.initializeDatabase();
   
-  app.listen(PORT, () => {
+  app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Server is running on port ${PORT}`);
     console.log(`🔗 Health check available at http://localhost:${PORT}/api/health`);
   });

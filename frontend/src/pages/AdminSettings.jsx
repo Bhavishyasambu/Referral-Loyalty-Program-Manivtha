@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth, API_BASE } from '../context/AuthContext';
 import Header from '../components/Header';
 import { Plus, ToggleLeft, ToggleRight, Calendar, Percent, Sparkles, Tag, Check } from 'lucide-react';
@@ -107,7 +107,7 @@ export default function AdminSettings() {
       }
     } catch (err) {
       console.error('Create campaign error:', err);
-      setAlert({ text: 'Server error creating campaign.', type: 'error' });
+      setAlert({ text: `Frontend Catch Error: ${err.message}`, type: 'error' });
     }
   };
 

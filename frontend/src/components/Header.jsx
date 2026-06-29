@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth, API_BASE } from '../context/AuthContext';
 import { Bell, User, Check, Sun, Moon, Crown, Award, Medal } from 'lucide-react';
 

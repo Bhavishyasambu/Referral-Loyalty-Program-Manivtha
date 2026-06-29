@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Header from '../components/Header';
 import { useAuth, API_BASE } from '../context/AuthContext';
 import { Bot, Sparkles, Send, Loader, ArrowRight } from 'lucide-react';
