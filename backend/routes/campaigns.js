@@ -10,7 +10,8 @@ router.get('/', verifyToken, async (req, res) => {
     if (req.user.role === 'admin') {
       queryText = 'SELECT * FROM campaigns ORDER BY created_at DESC';
     } else {
-      const today = new Date().toLocaleDateString('en-CA');
+      // Use ISO string to guarantee YYYY-MM-DD format regardless of server locale/OS
+      const today = new Date().toISOString().split('T')[0];
       queryText = `SELECT * FROM campaigns WHERE (is_active = 1 OR is_active = TRUE) AND start_date <= '${today}' AND end_date >= '${today}' ORDER BY end_date ASC`;
     }
     const campaigns = await db.query(queryText);
