@@ -12,7 +12,7 @@ router.get('/', verifyToken, async (req, res) => {
     } else {
       // Use ISO string to guarantee YYYY-MM-DD format regardless of server locale/OS
       const today = new Date().toISOString().split('T')[0];
-      queryText = `SELECT * FROM campaigns WHERE (is_active = 1 OR is_active = TRUE) AND start_date <= '${today}' AND end_date >= '${today}' ORDER BY end_date ASC`;
+      queryText = `SELECT * FROM campaigns WHERE is_active = TRUE AND start_date <= '${today}' AND end_date >= '${today}' ORDER BY end_date ASC`;
     }
     const campaigns = await db.query(queryText);
     return res.json(campaigns.rows);
@@ -59,8 +59,8 @@ router.post('/', verifyAdmin, async (req, res) => {
     }
 
     await db.query(
-      `INSERT INTO campaigns (name, code, description, points_multiplier, discount_percent, start_date, end_date, is_active)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, 1)`,
+      `INSERT INTO campaigns (name, code, description, points_multiplier, discount_percent, start_date, end_date)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
       [name.trim(), normalizedCode, description || '', parsedMultiplier, parsedDiscount, start_date, end_date]
     );
 
@@ -104,7 +104,7 @@ router.put('/:id', verifyAdmin, async (req, res) => {
     const updatedDiscount = discount_percent !== undefined ? parseFloat(discount_percent) : parseFloat(campaign.discount_percent);
     const updatedStart = start_date !== undefined ? start_date : campaign.start_date;
     const updatedEnd = end_date !== undefined ? end_date : campaign.end_date;
-    const updatedActive = is_active !== undefined ? (is_active ? 1 : 0) : (campaign.is_active ? 1 : 0);
+    const updatedActive = is_active !== undefined ? (is_active ? true : false) : (campaign.is_active ? true : false);
 
     // Handle code update with uniqueness check
     let updatedCode = campaign.code;
@@ -149,7 +149,7 @@ router.delete('/:id', verifyAdmin, async (req, res) => {
       return res.status(404).json({ message: 'Campaign not found.' });
     }
 
-    await db.query('UPDATE campaigns SET is_active = 0 WHERE id = $1', [campaignId]);
+    await db.query('UPDATE campaigns SET is_active = FALSE WHERE id = $1', [campaignId]);
     return res.json({ message: `Campaign "${existing.rows[0].name}" has been deactivated.` });
   } catch (err) {
     console.error('Delete campaign error:', err);

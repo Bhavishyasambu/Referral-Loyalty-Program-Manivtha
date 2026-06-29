@@ -108,7 +108,7 @@ router.post('/', verifyToken, async (req, res) => {
       // A. Check if it's an active Campaign
       const campaignQuery = await db.query(
         `SELECT id, name, points_multiplier, discount_percent FROM campaigns 
-         WHERE code = $1 AND (is_active = 1 OR is_active = TRUE) AND start_date <= $2 AND end_date >= $3`,
+         WHERE code = $1 AND is_active = TRUE AND start_date <= $2 AND end_date >= $3`,
         [uppercaseCode, today, today]
       );
 

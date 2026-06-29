@@ -26,7 +26,7 @@ async function generateUniqueVoucherCode() {
 router.get('/', verifyToken, async (req, res) => {
   try {
     const rewardsQuery = await db.query(
-      'SELECT * FROM rewards WHERE (is_active = 1 OR is_active = TRUE) ORDER BY points_cost ASC'
+      'SELECT * FROM rewards WHERE is_active = TRUE ORDER BY points_cost ASC'
     );
     return res.json(rewardsQuery.rows);
   } catch (err) {
@@ -53,7 +53,7 @@ router.post('/redeem', verifyToken, async (req, res) => {
 
     // 2. Get reward details (handle both SQLite int and PG boolean)
     const rewardRes = await db.query(
-      'SELECT * FROM rewards WHERE id = $1 AND (is_active = 1 OR is_active = TRUE)',
+      'SELECT * FROM rewards WHERE id = $1 AND is_active = TRUE',
       [rewardId]
     );
     if (rewardRes.rows.length === 0) {
@@ -156,7 +156,7 @@ router.post('/check-eligibility', verifyToken, async (req, res) => {
     // 1. Check if it's a Campaign Discount
     const campaignQuery = await db.query(
       `SELECT * FROM campaigns 
-       WHERE code = $1 AND (is_active = 1 OR is_active = TRUE) AND start_date <= $2 AND end_date >= $3`,
+       WHERE code = $1 AND is_active = TRUE AND start_date <= $2 AND end_date >= $3`,
       [uppercaseCode, today, today]
     );
 
